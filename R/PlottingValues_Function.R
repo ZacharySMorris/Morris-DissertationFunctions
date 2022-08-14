@@ -55,3 +55,45 @@ PlottingValues <- function(X,ColorGroup,ShapeGroup)
   out
 
 }
+
+Simple_PVs <- function(X,covariate,values,name,Xappend=FALSE){
+  #X is a covariate dataset, should be a data.frame
+  #covariate is the name of a specific covariate from the data frame that should be used to create a plotting value
+  #values is a list of values to replace the factors found in the data frame
+  #name is the name of the new plotting value to be saved
+  #Xappend is a logical value (T/F) of whether the output should be output as a single vector or appended to the original covariate dataset
+
+  tmp_X <- X
+  tmp_cov <- as.factor(tmp_X[[covariate]])
+  tmp_values <- values
+  values_class <- class(tmp_values)
+  tmp_names <- append(names(tmp_X),name)
+
+  if (!length(levels(tmp_cov)) == length(tmp_values)){
+    break
+    warning("The number of values supplied does not match the number of factors to be replaced.")
+  }else{
+    tmp_ch <- as.character(tmp_cov)
+    for (i in 1:length(levels(tmp_cov))){
+      tmp_level <- as.character(levels(tmp_cov)[[i]])
+      tmp_ch[tmp_ch == tmp_level] <- tmp_values[[i]]
+      out_values <- tmp_ch
+    }
+  }
+
+  if (Xappend == TRUE){
+    X_out <- cbind(tmp_X,tmp_ch)
+    names(X_out) <- tmp_names
+  }else{
+    # X_out <- tmp_ch
+    # names(X_out) <- name
+    X_out <- data.frame(tmp_ch)
+    colnames(X_out) <- name
+  }
+
+  out <- X_out
+  out
+
+}
+
+
